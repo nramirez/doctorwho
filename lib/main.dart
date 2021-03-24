@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,8 +18,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  var _emailForm = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,21 +34,36 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Dr. Soler"),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-              child: SizedBox(
+      body: Form(
+        key: _emailForm,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
                   width: 300,
                   child: TextFormField(
+                    validator: (value) => value.isEmpty
+                        ? "Correo Requerido"
+                        : EmailValidator.validate(value)
+                            ? null
+                            : "Correo Incorrecto",
                     decoration: InputDecoration(labelText: "Email"),
-                  ))),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextButton(onPressed: () => {}, child: Text("Entrar")),
-          )
-        ],
+                  )),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                    onPressed: () {
+                      if (_emailForm.currentState.validate()) {
+                        print("Vamonos!!!");
+                      }
+                    },
+                    child: Text("Entrar")),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
