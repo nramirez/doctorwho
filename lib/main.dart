@@ -1,119 +1,49 @@
-import 'package:email_validator/email_validator.dart';
+import 'package:doctorme/screens/admin/admin_app.dart';
+import 'package:doctorme/screens/pacientes/home_app.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:url_strategy/url_strategy.dart';
 
-void main() {
-  runApp(MyApp());
+import 'login.dart';
+
+Future main() async {
+  await DotEnv.load(fileName: ".env");
+  // Here we set the URL strategy for our web app.
+  // It is safe to call this function when running on mobile or desktop as well.
+  setPathUrlStrategy();
+  initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Dr. Soler',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginPage(),
-    );
-  }
-}
-
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
-
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  var _emailForm = GlobalKey<FormState>();
-  var _codeForm = GlobalKey<FormState>();
-  var authCode = 0;
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Dr. Soler"),
-      ),
-      body: authCode > 0 ? codeForm() : emailForm(),
-    );
-  }
+    return FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return StreamBuilder<User>(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) {
+                    return LoginApp();
+                  }
 
-  Form emailForm() {
-    return Form(
-      key: _emailForm,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-                width: 300,
-                child: TextFormField(
-                  validator: (value) => value.isEmpty
-                      ? "Correo Requerido"
-                      : EmailValidator.validate(value)
-                          ? null
-                          : "Correo Incorrecto",
-                  decoration: InputDecoration(labelText: "Email"),
-                )),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextButton(
-                  onPressed: () {
-                    if (_emailForm.currentState.validate()) {
-                      setState(() {
-                        authCode = 3525;
-                      });
-                    }
-                  },
-                  child: Text("Entrar")),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+                  if (isAdmin(snapshot.data.email)) {
+                    return AdminApp();
+                  }
 
-  Form codeForm() {
-    return Form(
-      key: _codeForm,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Revisa tu correo",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-                width: 100,
-                child: TextFormField(
-                  validator: (value) =>
-                      authCode > 0 && int.tryParse(value) == authCode
-                          ? null
-                          : "incorrecto",
-                  keyboardType: TextInputType.number,
-                  maxLength: 4,
-                  decoration: InputDecoration(
-                    labelText: "código",
-                  ),
-                )),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextButton(
-                  onPressed: () {
-                    if (_codeForm.currentState.validate()) {
-                      print("Vamonos!!!");
-                    }
-                  },
-                  child: Text("Entrar")),
-            )
-          ],
-        ),
-      ),
-    );
+                  return HomeApp();
+                });
+          }
+
+          return CircularProgressIndicator();
+        });
   }
 }
+
+bool isAdmin(email) => ["hola@doctor.com", "secre@doctor.com"].contains(email);

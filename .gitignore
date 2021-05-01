@@ -8,6 +8,9 @@
 .buildlog/
 .history
 .svn/
+.env*
+/web/config.js
+GoogleService-Info.plist
 
 # IntelliJ related
 *.iml
