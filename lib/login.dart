@@ -1,3 +1,5 @@
+import 'package:doctorme/screens/account/register.dart';
+import 'package:doctorme/services/profile_service.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -113,18 +115,17 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     if (_codeForm.currentState.validate()) {
                       var superPassword = "Dr.Soler7788";
+                      var perfil =
+                          await ProfileService().get(_emailController.text);
 
-                      try {
-                        await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                                email: _emailController.text,
-                                password: superPassword);
-                      } catch (e) {
+                      if (perfil == null) {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return new RegisterPage(email: _emailController.text);
+                        }));
+                      } else {
                         await FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: _emailController.text,
                             password: superPassword);
-
-                        print(e);
                       }
                     }
                   },
