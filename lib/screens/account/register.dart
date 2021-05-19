@@ -10,6 +10,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  String gender = "Sexo";
   createAccount() async {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: widget.email, password: "Dr.Soler7788");
@@ -42,7 +43,19 @@ class _RegisterPageState extends State<RegisterPage> {
                 textbox("nombre"),
                 textbox("apellido"),
                 textbox("telefono"),
-                textbox("sexo"),
+                DropdownButtonFormField(
+                    onChanged: (String v) {
+                      setState(() {
+                        gender = v;
+                      });
+                    },
+                    value: gender,
+                    items: ["Sexo", "Femenino", "Masculino", "Otro"]
+                        .map((v) => DropdownMenuItem(
+                              child: Text(v),
+                              value: v,
+                            ))
+                        .toList()),
                 textbox("fecha de nacimiento"),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
