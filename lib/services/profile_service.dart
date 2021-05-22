@@ -3,7 +3,22 @@ import 'package:doctorme/models/profile.dart';
 
 class ProfileService {
   get(String email) async {
-    return null;
+    try {
+      var snapshot = await FirebaseFirestore.instance
+          .collection('profiles')
+          .where('email', isEqualTo: email)
+          .get();
+      if (snapshot.docs.isEmpty) {
+        return null;
+      }
+
+      if (snapshot.docs.length > 1) {
+        print("Wey hay mas de 1 usuario con este correo. Limpia");
+      }
+      return Profile.fromSnapshot(snapshot.docs.first);
+    } catch (e) {
+      print(e);
+    }
   }
 
   add(Profile perfil) async {
