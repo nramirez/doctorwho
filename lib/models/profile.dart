@@ -9,8 +9,13 @@ class Profile {
   final String email;
   DocumentReference reference;
 
-  Profile(this.name, this.lastname, this.phone, this.gender, this.birthdate,
-      this.email);
+  Profile(
+      {this.name,
+      this.lastname,
+      this.phone,
+      this.gender,
+      this.birthdate,
+      this.email});
 
   Profile.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data.call(), reference: snapshot.reference);

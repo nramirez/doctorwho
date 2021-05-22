@@ -94,13 +94,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
                               await ProfileService().add(Profile(
-                                  nameController.text,
-                                  lastnameController.text,
-                                  phoneController.text,
-                                  gender,
-                                  birthdate,
-                                  widget.email));
+                                  name: nameController.text,
+                                  lastname: lastnameController.text,
+                                  phone: phoneController.text,
+                                  gender: gender,
+                                  birthdate: birthdate,
+                                  email: widget.email));
                             }
+                            await createAccount();
                           },
                           child: Text("Enviar")),
                     )

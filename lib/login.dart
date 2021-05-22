@@ -15,11 +15,7 @@ class LoginApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // temporal
-      home: RegisterPage(
-        email: "naz@aprendiendo.com",
-      ),
-      // home: LoginPage(),
+      home: LoginPage(),
     );
   }
 }
