@@ -35,6 +35,7 @@ dependencies:
   table_calendar: ^3.0.0-nullsafety.1
   url_strategy: ^0.2.0
   intl: ^0.17.0
+  flutter_holo_date_picker: ^0.3.4+1
 
   # firebase
   firebase_core: ^1.0.2

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 
 class RegisterPage extends StatefulWidget {
   final String email;
@@ -56,7 +57,21 @@ class _RegisterPageState extends State<RegisterPage> {
                               value: v,
                             ))
                         .toList()),
-                textbox("fecha de nacimiento"),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Text("fecha de nacimiento"),
+                ),
+                DatePickerWidget(
+                  initialDate: DateTime.now(),
+                  lastDate: DateTime.now().add(Duration(days: -1)),
+                  firstDate: DateTime.now().add(Duration(days: -(365 * 150))),
+                  dateFormat: "dd-MM-yyyy",
+                  locale: DatePicker.localeFromString("es"),
+                  pickerTheme: DateTimePickerTheme(
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      dividerColor: Theme.of(context).primaryColor),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: ElevatedButton(
