@@ -1,3 +1,5 @@
+import 'package:doctorme/models/profile.dart';
+import 'package:doctorme/services/profile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
@@ -13,14 +15,19 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   String gender = "Sexo";
   final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final lastnameController = TextEditingController();
+  final phoneController = TextEditingController();
+  DateTime birthdate;
 
   createAccount() async {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: widget.email, password: "Dr.Soler7788");
   }
 
-  Widget textbox(String description) {
+  Widget textbox(String description, TextEditingController textController) {
     return TextFormField(
+      controller: textController,
       validator: (value) => value.isEmpty ? "campo requerido" : null,
       decoration: InputDecoration(hintText: description),
     );
@@ -45,9 +52,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           "Hola! Para poder programar tu cita necesitamos saber un poco mas de ti"),
                     ),
                     Divider(),
-                    textbox("nombre"),
-                    textbox("apellido"),
-                    textbox("telefono"),
+                    textbox("nombre", nameController),
+                    textbox("apellido", lastnameController),
+                    textbox("telefono", phoneController),
                     DropdownButtonFormField(
                         validator: (value) =>
                             value == "Sexo" ? "campo requerido" : null,
@@ -75,6 +82,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           DateTime.now().add(Duration(days: -(365 * 150))),
                       dateFormat: "dd-MM-yyyy",
                       locale: DatePicker.localeFromString("es"),
+                      onChange: (value, selectedIndex) => birthdate = value,
                       pickerTheme: DateTimePickerTheme(
                           backgroundColor:
                               Theme.of(context).scaffoldBackgroundColor,
@@ -83,11 +91,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState.validate()) {
-                              print("Muy bien! Crear cuenta");
-                            } else {
-                              print("Error");
+                              await ProfileService().add(Profile(
+                                  nameController.text,
+                                  lastnameController.text,
+                                  phoneController.text,
+                                  gender,
+                                  birthdate,
+                                  widget.email));
                             }
                           },
                           child: Text("Enviar")),
