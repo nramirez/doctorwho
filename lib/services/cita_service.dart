@@ -1,10 +1,13 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doctorme/services/profile_service.dart';
 
 import '../models/cita.dart';
 
 class CitaService {
+  final profileService = ProfileService();
+
   Future<void> create(String email, DateTime day) async {
     try {
       var citas = await getByDay(day);
@@ -61,9 +64,15 @@ class CitaService {
           .get();
 
       List<Cita> citas = [];
-      snapshot.docs.forEach((element) {
-        citas.add(Cita.fromSnapshot(element));
-      });
+      List<Future> futures = [];
+
+      snapshot.docs.forEach((element) => futures.add(Future(() async {
+            var c = Cita.fromSnapshot(element);
+            c.profile = await profileService.get(c.email);
+            citas.add(c);
+          })));
+
+      await Future.wait(futures);
 
       citas.sort((a, b) => a.turn.compareTo(b.turn));
 

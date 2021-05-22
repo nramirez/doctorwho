@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doctorme/models/profile.dart';
 
 class Cita {
   int turn;
@@ -9,6 +10,7 @@ class Cita {
   String status;
   String email;
   DocumentReference reference;
+  Profile profile;
 
   String formattedDay() => '${day.day}/${day.month}/${day.year}';
 

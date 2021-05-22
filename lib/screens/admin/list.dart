@@ -46,7 +46,16 @@ class _CitaListState extends State<CitaList> {
                   tileColor:
                       c.isCancelled() ? Colors.red[100] : Colors.grey[100],
                   leading: Text(c.turn > 0 ? c.turn.toString() : ""),
-                  title: Center(child: Text(c.email)),
+                  title: Center(
+                      child: TextButton(
+                    child: Text(c.email),
+                    onPressed: c.profile == null
+                        ? null
+                        : () => Navigator.push(context,
+                                MaterialPageRoute(builder: (_) {
+                              return null;
+                            })),
+                  )),
                   subtitle: Center(child: Text(c.status)),
                   trailing: c.isCancelled()
                       ? IconButton(
