@@ -1,3 +1,4 @@
+import 'package:doctorme/screens/admin/patient.dart';
 import 'package:doctorme/services/cita_service.dart';
 import 'package:doctorme/models/cita.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,9 @@ class _CitaListState extends State<CitaList> {
                         ? null
                         : () => Navigator.push(context,
                                 MaterialPageRoute(builder: (_) {
-                              return null;
+                              return PatientPage(
+                                profile: c.profile,
+                              );
                             })),
                   )),
                   subtitle: Center(child: Text(c.status)),

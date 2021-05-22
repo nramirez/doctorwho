@@ -36,4 +36,20 @@ class ProfileService {
       print(e);
     }
   }
+
+  update(Profile perfil) async {
+    try {
+      var existente = await get(perfil.email);
+      if (existente == null) {
+        print("El usuario no existe");
+        return null;
+      }
+
+      await FirebaseFirestore.instance
+          .doc(perfil.reference.path)
+          .update(perfil.toJson());
+    } catch (e) {
+      print(e);
+    }
+  }
 }
