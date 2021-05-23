@@ -79,8 +79,7 @@ class _PatientPageState extends State<PatientPage> {
                       child: Text("fecha de nacimiento"),
                     ),
                     DatePickerWidget(
-                      initialDate:
-                          DateTime.now().add(Duration(days: -(365 * 18))),
+                      initialDate: birthdate,
                       lastDate: DateTime.now().add(Duration(days: -1)),
                       firstDate:
                           DateTime.now().add(Duration(days: -(365 * 150))),

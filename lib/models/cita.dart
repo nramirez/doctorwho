@@ -19,7 +19,7 @@ class Cita {
 
   Cita.fromMap(Map<String, dynamic> map, {this.reference})
       : turn = map['turn'],
-        day = map['day'].toDate(),
+        day = map['day'].toDate().toUtc(),
         status = map['status'],
         email = map['email'];
 

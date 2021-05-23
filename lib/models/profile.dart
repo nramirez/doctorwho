@@ -23,7 +23,7 @@ class Profile {
   Profile.fromMap(Map<String, dynamic> map, {this.reference})
       : name = map['name'],
         email = map['email'],
-        birthdate = map['birthdate'].toDate(),
+        birthdate = map['birthdate'].toDate().toUtc(),
         lastname = map['lastname'],
         phone = map['phone'],
         gender = map['gender'];
