@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   var _loginForm = GlobalKey<FormState>();
   var _codeForm = GlobalKey<FormState>();
   var _emailorPhoneController = TextEditingController();
-  var authCode = 0;
+  var authCode = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: Text("Dr. Soler"),
       ),
-      body: authCode > 0 ? codeForm() : emailForm(),
+      body: authCode > 999 ? codeForm() : emailForm(),
     );
   }
 
@@ -59,8 +59,11 @@ class _LoginPageState extends State<LoginPage> {
                 child: TextFormField(
                   decoration: InputDecoration(hintText: "Email o Telefono"),
                   controller: _emailorPhoneController,
-                  validator: (value) =>
-                      value.isEmpty ? "campo requerido" : null,
+                  validator: (value) => value.isEmpty
+                      ? "campo requerido"
+                      : authCode == 0
+                          ? "valor incorrecto"
+                          : null,
                 )),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -77,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                       }
                       setState(() {
                         authCode = code;
+                        _loginForm.currentState.validate();
                         print(code);
                       });
                     }
@@ -105,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                 width: 100,
                 child: TextFormField(
                   validator: (value) =>
-                      authCode > 0 && int.tryParse(value) == authCode
+                      authCode > 999 && int.tryParse(value) == authCode
                           ? null
                           : "incorrecto",
                   keyboardType: TextInputType.number,
@@ -125,8 +129,17 @@ class _LoginPageState extends State<LoginPage> {
 
                       if (perfil == null) {
                         Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          var email = isEmail(_emailorPhoneController.text)
+                              ? _emailorPhoneController.text
+                              : null;
+                          var phone = isEmail(_emailorPhoneController.text)
+                              ? null
+                              : _emailorPhoneController.text;
+
                           return new RegisterPage(
-                              email: _emailorPhoneController.text);
+                            email: email,
+                            phone: phone,
+                          );
                         }));
                       } else {
                         await FirebaseAuth.instance.signInWithEmailAndPassword(

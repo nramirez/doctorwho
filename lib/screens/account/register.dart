@@ -6,7 +6,8 @@ import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 
 class RegisterPage extends StatefulWidget {
   final String email;
-  RegisterPage({Key key, this.email}) : super(key: key);
+  final String phone;
+  RegisterPage({Key key, this.email, this.phone}) : super(key: key);
 
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -18,7 +19,21 @@ class _RegisterPageState extends State<RegisterPage> {
   final nameController = TextEditingController();
   final lastnameController = TextEditingController();
   final phoneController = TextEditingController();
+  final emailController = TextEditingController();
   DateTime birthdate;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.email != null) {
+      emailController.text = widget.email;
+    }
+
+    if (widget.phone != null) {
+      phoneController.text = widget.phone;
+    }
+  }
 
   createAccount() async {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -54,7 +69,24 @@ class _RegisterPageState extends State<RegisterPage> {
                     Divider(),
                     textbox("nombre", nameController),
                     textbox("apellido", lastnameController),
-                    textbox("telefono", phoneController),
+                    TextFormField(
+                      controller: emailController,
+                      readOnly: widget.email != null,
+                      validator: (value) =>
+                          widget.email == null && value.isEmpty
+                              ? "campo requerido"
+                              : null,
+                      decoration: InputDecoration(hintText: "email"),
+                    ),
+                    TextFormField(
+                      controller: phoneController,
+                      readOnly: widget.phone != null,
+                      validator: (value) =>
+                          widget.phone == null && value.isEmpty
+                              ? "campo requerido"
+                              : null,
+                      decoration: InputDecoration(hintText: "telefono"),
+                    ),
                     DropdownButtonFormField(
                         validator: (value) =>
                             value == "Sexo" ? "campo requerido" : null,
@@ -100,8 +132,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   gender: gender,
                                   birthdate: birthdate,
                                   email: widget.email));
+
+                              await createAccount();
                             }
-                            await createAccount();
                           },
                           child: Text("Enviar")),
                     )

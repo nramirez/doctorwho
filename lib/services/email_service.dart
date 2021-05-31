@@ -23,11 +23,16 @@ class EmailService {
     if (env.emailDisabled) {
       return code;
     }
-    await mailgun.send(
-        from: "DR. Soler <ram.nazaret@gmail.com>",
-        to: [to],
-        subject: "Codigo de autorizacion DR. Soler",
-        text: code.toString());
+    try {
+      await mailgun.send(
+          from: "DR. Soler <ram.nazaret@gmail.com>",
+          to: [to],
+          subject: "Codigo de autorizacion DR. Soler",
+          text: code.toString());
+    } catch (e) {
+      return 0;
+    }
+
     return code;
   }
 }

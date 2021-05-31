@@ -22,7 +22,12 @@ class PhoneService {
     if (env.emailDisabled) {
       return code;
     }
-    await twilio.sendSMS(toNumber: to, messageBody: code.toString());
+    try {
+      await twilio.sendSMS(toNumber: to, messageBody: code.toString());
+    } catch (e) {
+      print(e);
+      return 0;
+    }
     return code;
   }
 }
