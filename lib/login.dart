@@ -1,4 +1,5 @@
 import 'package:doctorme/screens/account/register.dart';
+import 'package:doctorme/services/phone_service.dart';
 import 'package:doctorme/services/profile_service.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,7 +22,6 @@ class LoginApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  final emailService = EmailService();
   LoginPage({Key key}) : super(key: key);
 
   @override
@@ -29,9 +29,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  var _emailForm = GlobalKey<FormState>();
+  final emailService = EmailService();
+  final phoneService = PhoneService();
+  var _loginForm = GlobalKey<FormState>();
   var _codeForm = GlobalKey<FormState>();
-  var _emailController = TextEditingController();
+  var _emailorPhoneController = TextEditingController();
   var authCode = 0;
 
   @override
@@ -46,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Form emailForm() {
     return Form(
-      key: _emailForm,
+      key: _loginForm,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -55,21 +57,24 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
                 width: 300,
                 child: TextFormField(
-                  controller: _emailController,
-                  validator: (value) => value.isEmpty
-                      ? "Correo Requerido"
-                      : EmailValidator.validate(value)
-                          ? null
-                          : "Correo Incorrecto",
-                  decoration: InputDecoration(labelText: "Email"),
+                  decoration: InputDecoration(hintText: "Email o Telefono"),
+                  controller: _emailorPhoneController,
+                  validator: (value) =>
+                      value.isEmpty ? "campo requerido" : null,
                 )),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
                   onPressed: () async {
-                    if (_emailForm.currentState.validate()) {
-                      var code = await widget.emailService
-                          .sendSignInCode(_emailController.text);
+                    if (_loginForm.currentState.validate()) {
+                      var code;
+                      if (isEmail(_emailorPhoneController.text)) {
+                        code = await emailService
+                            .sendSignInCode(_emailorPhoneController.text);
+                      } else {
+                        code = await phoneService
+                            .sendSignInCode(_emailorPhoneController.text);
+                      }
                       setState(() {
                         authCode = code;
                         print(code);
@@ -115,16 +120,17 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     if (_codeForm.currentState.validate()) {
                       var superPassword = "Dr.Soler7788";
-                      var perfil =
-                          await ProfileService().get(_emailController.text);
+                      var perfil = await ProfileService()
+                          .get(_emailorPhoneController.text);
 
                       if (perfil == null) {
                         Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return new RegisterPage(email: _emailController.text);
+                          return new RegisterPage(
+                              email: _emailorPhoneController.text);
                         }));
                       } else {
                         await FirebaseAuth.instance.signInWithEmailAndPassword(
-                            email: _emailController.text,
+                            email: _emailorPhoneController.text,
                             password: superPassword);
                       }
                     }
@@ -133,8 +139,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
                 onPressed: () async {
-                  var code = await widget.emailService
-                      .sendSignInCode(_emailController.text);
+                  var code = await emailService
+                      .sendSignInCode(_emailorPhoneController.text);
                   setState(() {
                     authCode = code;
                     print(code);
@@ -149,4 +155,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  bool isEmail(String text) => EmailValidator.validate(text);
 }
