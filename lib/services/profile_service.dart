@@ -2,12 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctorme/models/profile.dart';
 
 class ProfileService {
-  get(String email) async {
+  bool isNullOrEmpty(String text) => text == null || text.isEmpty;
+
+  get({String email, String phone}) async {
+    if (isNullOrEmpty(email) && isNullOrEmpty(phone)) {
+      return null;
+    }
+
     try {
-      var snapshot = await FirebaseFirestore.instance
-          .collection('profiles')
-          .where('email', isEqualTo: email)
-          .get();
+      var snapshot;
+      if (!isNullOrEmpty(email)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection('profiles')
+            .where('email', isEqualTo: email)
+            .get();
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection('profiles')
+            .where('phone', isEqualTo: phone)
+            .get();
+      }
+
       if (snapshot.docs.isEmpty) {
         return null;
       }
@@ -23,7 +38,7 @@ class ProfileService {
 
   add(Profile perfil) async {
     try {
-      var existente = await get(perfil.email);
+      var existente = await get(email: perfil.email);
       if (existente != null) {
         print("Usuario existente");
         return existente;
@@ -39,7 +54,7 @@ class ProfileService {
 
   update(Profile perfil) async {
     try {
-      var existente = await get(perfil.email);
+      var existente = await get(email: perfil.email);
       if (existente == null) {
         print("El usuario no existe");
         return null;

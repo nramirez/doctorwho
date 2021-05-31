@@ -68,7 +68,7 @@ class CitaService {
 
       snapshot.docs.forEach((element) => futures.add(Future(() async {
             var c = Cita.fromSnapshot(element);
-            c.profile = await profileService.get(c.email);
+            c.profile = await profileService.get(email: c.email);
             citas.add(c);
           })));
 

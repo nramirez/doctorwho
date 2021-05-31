@@ -123,19 +123,18 @@ class _LoginPageState extends State<LoginPage> {
               child: TextButton(
                   onPressed: () async {
                     if (_codeForm.currentState.validate()) {
+                      var email = isEmail(_emailorPhoneController.text)
+                          ? _emailorPhoneController.text
+                          : null;
+                      var phone = isEmail(_emailorPhoneController.text)
+                          ? null
+                          : _emailorPhoneController.text;
                       var superPassword = "Dr.Soler7788";
                       var perfil = await ProfileService()
-                          .get(_emailorPhoneController.text);
+                          .get(email: email, phone: phone);
 
                       if (perfil == null) {
                         Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          var email = isEmail(_emailorPhoneController.text)
-                              ? _emailorPhoneController.text
-                              : null;
-                          var phone = isEmail(_emailorPhoneController.text)
-                              ? null
-                              : _emailorPhoneController.text;
-
                           return new RegisterPage(
                             email: email,
                             phone: phone,
@@ -143,8 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                         }));
                       } else {
                         await FirebaseAuth.instance.signInWithEmailAndPassword(
-                            email: _emailorPhoneController.text,
-                            password: superPassword);
+                            email: perfil.email, password: superPassword);
                       }
                     }
                   },
