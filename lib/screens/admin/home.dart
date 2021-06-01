@@ -1,3 +1,4 @@
+import 'package:doctorme/screens/account/user_details.dart';
 import 'package:doctorme/screens/admin/cita_form.dart';
 import 'package:doctorme/services/cita_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,11 +38,17 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.exit_to_app),
-          onPressed: () => FirebaseAuth.instance.signOut(),
-        ),
         title: Text("Admin"),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => UserDetailsPage(
+                            email: FirebaseAuth.instance.currentUser.email,
+                          ))),
+              icon: Icon(Icons.person))
+        ],
       ),
       body: GridView.count(
         crossAxisCount: count,

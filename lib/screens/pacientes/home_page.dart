@@ -1,3 +1,4 @@
+import 'package:doctorme/screens/account/user_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,11 +17,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.exit_to_app),
-          onPressed: () => FirebaseAuth.instance.signOut(),
-        ),
         title: Text("Citas"),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => UserDetailsPage(
+                            email: FirebaseAuth.instance.currentUser.email,
+                          ))),
+              icon: Icon(Icons.person))
+        ],
       ),
       body: Center(
         child: Padding(
