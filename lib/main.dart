@@ -1,5 +1,5 @@
-import 'package:doctorme/screens/admin/admin_app.dart';
-import 'package:doctorme/screens/pacientes/home_app.dart';
+import 'package:doctorme/screens/admin/app.dart';
+import 'package:doctorme/screens/pacientes/app.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

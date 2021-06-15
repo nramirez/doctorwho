@@ -1,9 +1,9 @@
-import 'package:doctorme/screens/account/user_details.dart';
+import 'package:doctorme/screens/account/details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'cita_list.dart';
-import 'create_cita.dart';
+import 'citas/list.dart';
+import 'citas/create.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);

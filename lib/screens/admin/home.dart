@@ -1,5 +1,5 @@
-import 'package:doctorme/screens/admin/citas.dart';
-import 'package:doctorme/screens/admin/patients.dart';
+import 'package:doctorme/screens/admin/citas/index.dart';
+import 'package:doctorme/screens/admin/patients/list.dart';
 import 'package:doctorme/screens/common/navbar.dart';
 import 'package:flutter/material.dart';
 

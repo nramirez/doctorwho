@@ -1,49 +1,18 @@
 import 'package:doctorme/models/profile.dart';
 import 'package:doctorme/services/profile_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
+import 'package:flutter_holo_date_picker/widget/date_picker_widget.dart';
 
-class UserDetailsPage extends StatelessWidget {
-  final String email;
-  final ProfileService profileService = ProfileService();
-
-  UserDetailsPage({Key key, this.email}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Dr. Soler"),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.exit_to_app),
-              onPressed: () => FirebaseAuth.instance.signOut(),
-            )
-          ],
-        ),
-        body: Center(
-            child: FutureBuilder(
-                future: profileService.get(email: email),
-                builder: (context, snapshot) {
-                  if (snapshot.data == null) {
-                    return CircularProgressIndicator();
-                  }
-                  return PatientPage(profile: snapshot.data);
-                })));
-  }
-}
-
-class PatientPage extends StatefulWidget {
+class UserPage extends StatefulWidget {
   final Profile profile;
-  PatientPage({Key key, this.profile}) : super(key: key);
+  UserPage({Key key, this.profile}) : super(key: key);
 
   @override
-  _PatientPageState createState() => _PatientPageState();
+  _UserPageState createState() => _UserPageState();
 }
 
-class _PatientPageState extends State<PatientPage> {
+class _UserPageState extends State<UserPage> {
   String gender = "Sexo";
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();

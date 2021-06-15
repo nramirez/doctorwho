@@ -1,4 +1,4 @@
-import 'package:doctorme/screens/account/user_details.dart';
+import 'package:doctorme/screens/account/details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

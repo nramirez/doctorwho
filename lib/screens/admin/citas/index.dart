@@ -1,4 +1,4 @@
-import 'package:doctorme/screens/admin/cita_form.dart';
+import 'package:doctorme/screens/admin/citas/form.dart';
 import 'package:doctorme/screens/common/navbar.dart';
 import 'package:doctorme/services/cita_service.dart';
 import 'package:flutter/material.dart';

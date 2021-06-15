@@ -1,8 +1,8 @@
 import 'package:doctorme/screens/admin/home.dart';
-import 'package:doctorme/screens/admin/patients.dart';
+import 'package:doctorme/screens/admin/patients/list.dart';
 import 'package:flutter/material.dart';
 
-import 'citas.dart';
+import 'citas/index.dart';
 
 class AdminApp extends StatelessWidget {
   const AdminApp({Key key}) : super(key: key);
