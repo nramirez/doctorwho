@@ -29,11 +29,13 @@ class MyApp extends StatelessWidget {
             return StreamBuilder<User>(
                 stream: FirebaseAuth.instance.authStateChanges(),
                 builder: (context, snapshot) {
-                  if (snapshot.data == null) {
+                  if (snapshot.data == null &&
+                      FirebaseAuth.instance.currentUser == null) {
                     return LoginApp();
                   }
+                  var user = FirebaseAuth.instance.currentUser;
 
-                  if (isAdmin(snapshot.data.email)) {
+                  if (isAdmin(user.email)) {
                     return AdminApp();
                   }
 
