@@ -8,19 +8,42 @@ class HomePage extends StatelessWidget {
 
   const HomePage({Key key}) : super(key: key);
 
+  Widget iconPage({context, route, description, icon}) {
+    return TextButton(
+        onPressed: () => Navigator.pushNamed(context, route),
+        child: Card(
+          child: SizedBox(
+            width: 100,
+            height: 70,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [Icon(icon), Text(description)],
+            ),
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: adminNavbar(context),
-      body: Column(
-        children: [
-          TextButton(
-              onPressed: () => Navigator.pushNamed(context, CitasPage.route),
-              child: Text("Citas")),
-          TextButton(
-              onPressed: () => Navigator.pushNamed(context, PatientsPage.route),
-              child: Text("Pacientes")),
-        ],
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            iconPage(
+                context: context,
+                route: CitasPage.route,
+                description: "Citas",
+                icon: Icons.calendar_today_outlined),
+            iconPage(
+                context: context,
+                route: PatientsPage.route,
+                description: "Pacientes",
+                icon: Icons.people),
+          ],
+        ),
       ),
     );
   }
