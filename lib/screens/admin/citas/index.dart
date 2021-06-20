@@ -21,6 +21,7 @@ class _CitasPageState extends State<CitasPage> {
   DateTime _focusedDay;
   DateTime _selectedDay;
   bool expanded;
+  Map<String, int> appts = Map<String, int>();
 
   @override
   void initState() {
@@ -28,6 +29,14 @@ class _CitasPageState extends State<CitasPage> {
     _focusedDay = DateTime.now();
     _selectedDay = DateTime.now();
     expanded = false;
+    if (appts.isEmpty) {
+      loadAppts(_selectedDay);
+    }
+  }
+
+  Future loadAppts(DateTime from) async {
+    appts.addAll(await citaService.getApptsCount(from: from));
+    setState(() {});
   }
 
   @override
@@ -61,7 +70,12 @@ class _CitasPageState extends State<CitasPage> {
                 child: Text(day.day.toString()),
               ),
               markerBuilder: (context, day, events) {
-                var appts = "5";
+                var key = "${day.day}/${day.month}/${day.year}";
+                var count = appts.containsKey(key) ? appts[key] : 0;
+
+                if (count == 0) {
+                  return null;
+                }
 
                 return Align(
                   alignment: Alignment.bottomRight,
@@ -72,13 +86,17 @@ class _CitasPageState extends State<CitasPage> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: Colors.cyan),
                     child: Text(
-                      appts,
+                      count.toString(),
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
                 );
               },
             ),
+            onPageChanged: (focusedDay) async {
+              _focusedDay = focusedDay;
+              await loadAppts(focusedDay);
+            },
           ),
           Column(
             children: [

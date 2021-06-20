@@ -7,6 +7,7 @@ import '../models/cita.dart';
 
 class CitaService {
   final profileService = ProfileService();
+  static String collection = "citas";
 
   Future<void> create(String email, DateTime day) async {
     try {
@@ -15,7 +16,7 @@ class CitaService {
 
       citas.forEach((element) => turn = max(element.turn + 1, turn));
 
-      await FirebaseFirestore.instance.collection('citas').add(
+      await FirebaseFirestore.instance.collection(collection).add(
           {'email': email, 'day': day, 'turn': turn, 'status': 'pendiente'});
     } catch (e) {
       print(e);
@@ -25,7 +26,7 @@ class CitaService {
   Future<List<Cita>> getByEmail(String email) async {
     try {
       var snapshot = await FirebaseFirestore.instance
-          .collection('citas')
+          .collection(collection)
           .where('email', isEqualTo: email)
           .get();
 
@@ -59,7 +60,7 @@ class CitaService {
     try {
       var nextDay = day.add(Duration(days: 1));
       var snapshot = await FirebaseFirestore.instance
-          .collection('citas')
+          .collection(collection)
           .where('day', isGreaterThanOrEqualTo: day, isLessThan: nextDay)
           .get();
 
@@ -111,5 +112,29 @@ class CitaService {
       print(e);
       return null;
     }
+  }
+
+  // Este metodo devuelve la cantidad de citas por dia
+  // por los proximos 60 dias luego de la fecha especificada
+  Future<Map<String, int>> getApptsCount({DateTime from}) async {
+    var sixtyDaysAhead = from.add(Duration(days: 60));
+
+    var snapshot = await FirebaseFirestore.instance
+        .collection(collection)
+        .where('day',
+            isGreaterThan: from.add(Duration(days: -2)),
+            isLessThan: sixtyDaysAhead)
+        .get();
+
+    var appts = Map<String, int>();
+
+    snapshot.docs.forEach((c) {
+      var cita = Cita.fromSnapshot(c);
+      var key = cita.formattedDay();
+      appts[key] = appts.containsKey(key) ? appts[key] : 0;
+      appts[key]++;
+    });
+
+    return appts;
   }
 }
