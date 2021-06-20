@@ -67,4 +67,17 @@ class ProfileService {
       print(e);
     }
   }
+
+  Future<List<Profile>> getAll() async {
+    var snapshot =
+        await FirebaseFirestore.instance.collection('profiles').get();
+
+    List<Profile> patients = [];
+
+    snapshot.docs.forEach((doc) {
+      patients.add(Profile.fromSnapshot(doc));
+    });
+
+    return patients;
+  }
 }

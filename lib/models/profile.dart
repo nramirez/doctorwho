@@ -38,4 +38,9 @@ class Profile {
       'email': email
     };
   }
+
+  String fullname() => name + " " + lastname;
+
+  String formattedBirthDate() =>
+      "${birthdate.day}/${birthdate.month}/${birthdate.year}";
 }
