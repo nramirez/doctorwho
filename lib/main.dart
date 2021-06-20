@@ -1,4 +1,5 @@
 import 'package:doctorme/screens/admin/app.dart';
+import 'package:doctorme/screens/common/loading.dart';
 import 'package:doctorme/screens/pacientes/app.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
                 });
           }
 
-          return CircularProgressIndicator();
+          return LoadingPage();
         });
   }
 }
