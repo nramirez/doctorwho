@@ -43,19 +43,43 @@ class _CitasPageState extends State<CitasPage> {
         crossAxisCount: count,
         children: [
           TableCalendar(
-              locale: 'es_ES',
-              headerStyle:
-                  HeaderStyle(titleCentered: true, formatButtonVisible: false),
-              selectedDayPredicate: (day) => _selectedDay == day,
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _focusedDay = focusedDay;
-                  _selectedDay = selectedDay;
-                });
+            locale: 'es_ES',
+            headerStyle:
+                HeaderStyle(titleCentered: true, formatButtonVisible: false),
+            selectedDayPredicate: (day) => _selectedDay == day,
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _focusedDay = focusedDay;
+                _selectedDay = selectedDay;
+              });
+            },
+            focusedDay: _focusedDay,
+            firstDay: DateTime.now(),
+            lastDay: DateTime.now().add(Duration(days: 300)),
+            calendarBuilders: CalendarBuilders(
+              todayBuilder: (context, day, focusedDay) => Center(
+                child: Text(day.day.toString()),
+              ),
+              markerBuilder: (context, day, events) {
+                var appts = "5";
+
+                return Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.cyan),
+                    child: Text(
+                      appts,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
               },
-              focusedDay: _focusedDay,
-              firstDay: DateTime.now(),
-              lastDay: DateTime.now().add(Duration(days: 300))),
+            ),
+          ),
           Column(
             children: [
               TextButton(
