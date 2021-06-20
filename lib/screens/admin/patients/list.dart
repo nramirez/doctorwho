@@ -1,4 +1,5 @@
 import 'package:doctorme/models/profile.dart';
+import 'package:doctorme/screens/account/details.dart';
 import 'package:doctorme/screens/common/navbar.dart';
 import 'package:doctorme/services/profile_service.dart';
 import 'package:flutter/material.dart';
@@ -78,29 +79,35 @@ class Rows extends StatelessWidget {
             itemCount: patients.length,
             itemBuilder: (context, idx) {
               var p = patients[idx];
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: CircleAvatar(
-                          child: Icon(Icons.person),
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            p.fullname(),
+              return TextButton(
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => UserDetailsPage(email: p.email))),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: CircleAvatar(
+                            child: Icon(Icons.person),
                           ),
-                          Text(p.email),
-                          Text(p.phone),
-                          Text(p.formattedBirthDate())
-                        ],
-                      )
-                    ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              p.fullname(),
+                            ),
+                            Text(p.email),
+                            Text(p.phone),
+                            Text(p.formattedBirthDate())
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               );
