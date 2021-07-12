@@ -7,6 +7,7 @@ class Profile {
   final String gender;
   final DateTime birthdate;
   final String email;
+  final String role;
   DocumentReference reference;
 
   Profile(
@@ -15,7 +16,8 @@ class Profile {
       this.phone,
       this.gender,
       this.birthdate,
-      this.email});
+      this.email,
+      this.role});
 
   Profile.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data.call(), reference: snapshot.reference);
@@ -26,7 +28,8 @@ class Profile {
         birthdate = map['birthdate'].toDate().toUtc(),
         lastname = map['lastname'],
         phone = map['phone'],
-        gender = map['gender'];
+        gender = map['gender'],
+        role = map['role'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -35,7 +38,8 @@ class Profile {
       'phone': phone,
       'gender': gender,
       'birthdate': birthdate,
-      'email': email
+      'email': email,
+      'role': role
     };
   }
 

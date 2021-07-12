@@ -14,6 +14,7 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   String gender = "Sexo";
+  String role = "Rol";
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final lastnameController = TextEditingController();
@@ -32,8 +33,9 @@ class _UserPageState extends State<UserPage> {
     super.initState();
     nameController.text = widget.profile.name;
     lastnameController.text = widget.profile.lastname;
-    gender = widget.profile.gender;
+    gender = widget.profile.gender == null ? gender : widget.profile.gender;
     birthdate = widget.profile.birthdate;
+    role = widget.profile.role == null ? role : widget.profile.role;
   }
 
   @override
@@ -72,6 +74,21 @@ class _UserPageState extends State<UserPage> {
                             value: v,
                           ))
                       .toList()),
+              DropdownButtonFormField(
+                  validator: (value) =>
+                      value == "Rol" ? "campo requerido" : null,
+                  onChanged: (String v) {
+                    setState(() {
+                      role = v;
+                    });
+                  },
+                  value: role,
+                  items: ["Rol", "Admin", "Paciente"]
+                      .map((v) => DropdownMenuItem(
+                            child: Text(v),
+                            value: v,
+                          ))
+                      .toList()),
               Padding(
                 padding: const EdgeInsets.only(top: 12.0),
                 child: Text("fecha de nacimiento"),
@@ -93,13 +110,14 @@ class _UserPageState extends State<UserPage> {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         await ProfileService().update(Profile(
-                            name: nameController.text,
-                            lastname: lastnameController.text,
-                            phone: widget.profile.phone,
-                            gender: gender,
-                            birthdate: birthdate,
-                            email: widget.profile.email)
-                          ..reference = widget.profile.reference);
+                          name: nameController.text,
+                          lastname: lastnameController.text,
+                          phone: widget.profile.phone,
+                          gender: gender,
+                          birthdate: birthdate,
+                          email: widget.profile.email,
+                          role: role,
+                        )..reference = widget.profile.reference);
                       }
                       Navigator.pop(context);
                     },
