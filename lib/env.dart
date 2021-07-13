@@ -6,6 +6,7 @@ class Env {
   String mailgunDomain = env['MAILGUN_DOMAIN'];
   String mailgunApiKey = env['MAILGUN_API_KEY'];
   bool emailDisabled = env['EMAIL_DISABLED'] == '1';
+  String superAdmin = env['SUPER_ADMIN'];
 
   Twilio twilio = Twilio(
     accountSid: env['TWILIO_accountSid'],

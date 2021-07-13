@@ -1,3 +1,4 @@
+import 'package:doctorme/env.dart';
 import 'package:doctorme/screens/admin/app.dart';
 import 'package:doctorme/screens/common/loading.dart';
 import 'package:doctorme/screens/pacientes/app.dart';
@@ -49,4 +50,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
-bool isAdmin(email) => ["hola@doctor.com", "secre@doctor.com"].contains(email);
+bool isAdmin(email) => [Env().superAdmin].contains(email);
