@@ -35,7 +35,8 @@ class _UserPageState extends State<UserPage> {
     lastnameController.text = widget.profile.lastname;
     gender = widget.profile.gender == null ? gender : widget.profile.gender;
     birthdate = widget.profile.birthdate;
-    role = widget.profile.role == null ? role : widget.profile.role;
+    role =
+        widget.profile.role == null ? role : widget.profile.role.toUpperCase();
   }
 
   @override
@@ -83,7 +84,7 @@ class _UserPageState extends State<UserPage> {
                     });
                   },
                   value: role,
-                  items: ["Rol", "Admin", "Paciente"]
+                  items: ["Rol", "ADMIN", "PACIENTE"]
                       .map((v) => DropdownMenuItem(
                             child: Text(v),
                             value: v,

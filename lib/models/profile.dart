@@ -39,7 +39,7 @@ class Profile {
       'gender': gender,
       'birthdate': birthdate,
       'email': email,
-      'role': role
+      'role': role.toUpperCase()
     };
   }
 
@@ -47,4 +47,6 @@ class Profile {
 
   String formattedBirthDate() =>
       "${birthdate.day}/${birthdate.month}/${birthdate.year}";
+
+  bool isAdmin() => role.toUpperCase() == "ADMIN";
 }

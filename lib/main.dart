@@ -1,7 +1,9 @@
 import 'package:doctorme/env.dart';
+import 'package:doctorme/models/profile.dart';
 import 'package:doctorme/screens/admin/app.dart';
 import 'package:doctorme/screens/common/loading.dart';
 import 'package:doctorme/screens/pacientes/app.dart';
+import 'package:doctorme/services/profile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,8 @@ Future main() async {
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
+  final ProfileService _profileSerice = ProfileService();
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -35,19 +39,31 @@ class MyApp extends StatelessWidget {
                       FirebaseAuth.instance.currentUser == null) {
                     return LoginApp();
                   }
-                  var user = FirebaseAuth.instance.currentUser;
 
-                  if (isAdmin(user.email)) {
-                    return AdminApp();
-                  }
-
-                  return HomeApp();
+                  return authenticatedUser(FirebaseAuth.instance.currentUser);
                 });
           }
 
           return LoadingPage();
         });
   }
+
+  Widget authenticatedUser(User user) {
+    return FutureBuilder(
+        future: _profileSerice.get(email: user.email),
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return LoadingPage();
+          }
+          Profile p = snapshot.data;
+
+          if (isSuperAdmin(user.email) || p.isAdmin()) {
+            return AdminApp();
+          }
+
+          return HomeApp();
+        });
+  }
 }
 
-bool isAdmin(email) => [Env().superAdmin].contains(email);
+bool isSuperAdmin(email) => [Env().superAdmin].contains(email);
