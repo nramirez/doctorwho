@@ -1,4 +1,3 @@
-import 'package:doctorme/env.dart';
 import 'package:doctorme/screens/admin/app.dart';
 import 'package:doctorme/screens/common/loading.dart';
 import 'package:doctorme/screens/pacientes/app.dart';
@@ -44,8 +43,7 @@ class MyApp extends StatelessWidget {
                   var details = snapshot.data;
                   context.watch<AppState>().currentUser = details;
 
-                  if (isSuperAdmin(details.user.email) ||
-                      details.profile.isAdmin()) {
+                  if (details.isAdmin()) {
                     return AdminApp();
                   }
 
@@ -57,5 +55,3 @@ class MyApp extends StatelessWidget {
         });
   }
 }
-
-bool isSuperAdmin(email) => [Env().superAdmin].contains(email);

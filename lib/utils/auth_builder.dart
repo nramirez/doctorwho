@@ -4,9 +4,21 @@ import 'package:doctorme/models/profile.dart';
 import 'package:doctorme/services/profile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../env.dart';
+
 class UserDetails {
   final Profile profile;
   final User user;
+
+  bool isAdmin() {
+    if (profile == null || user == null) {
+      return false;
+    }
+
+    return isSuperAdmin(profile.email) || profile.isAdmin();
+  }
+
+  bool isSuperAdmin(email) => [Env().superAdmin].contains(email);
 
   UserDetails({this.profile, this.user});
 }

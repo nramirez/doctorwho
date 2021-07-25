@@ -40,7 +40,7 @@ class _UserPageState extends State<UserPage> {
     birthdate = widget.profile.birthdate;
     role =
         widget.profile.role == null ? role : widget.profile.role.toUpperCase();
-    isAdmin = context.read<AppState>().isAdmin();
+    isAdmin = context.read<AppState>().currentUser.isAdmin();
   }
 
   @override
