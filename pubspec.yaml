@@ -37,12 +37,13 @@ dependencies:
   intl: ^0.17.0
   flutter_holo_date_picker: ^0.3.4+1
   twilio_flutter: ^0.0.9
+  pin_code_fields: ^7.2.0
+  provider: ^5.0.0
 
   # firebase
   firebase_core: ^1.0.2
   firebase_auth: ^1.0.1
   cloud_firestore: ^1.0.3
-  pin_code_fields: ^7.2.0
 
 dev_dependencies:
   flutter_test:

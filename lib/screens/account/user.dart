@@ -1,8 +1,10 @@
 import 'package:doctorme/models/profile.dart';
 import 'package:doctorme/services/profile_service.dart';
+import 'package:doctorme/utils/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_holo_date_picker/widget/date_picker_widget.dart';
+import 'package:provider/provider.dart';
 
 class UserPage extends StatefulWidget {
   final Profile profile;
@@ -19,6 +21,7 @@ class _UserPageState extends State<UserPage> {
   final nameController = TextEditingController();
   final lastnameController = TextEditingController();
   DateTime birthdate;
+  bool isAdmin = false;
 
   Widget textbox(String description, TextEditingController textController) {
     return TextFormField(
@@ -37,6 +40,7 @@ class _UserPageState extends State<UserPage> {
     birthdate = widget.profile.birthdate;
     role =
         widget.profile.role == null ? role : widget.profile.role.toUpperCase();
+    isAdmin = context.read<AppState>().isAdmin();
   }
 
   @override
@@ -75,21 +79,24 @@ class _UserPageState extends State<UserPage> {
                             value: v,
                           ))
                       .toList()),
-              DropdownButtonFormField(
-                  validator: (value) =>
-                      value == "Rol" ? "campo requerido" : null,
-                  onChanged: (String v) {
-                    setState(() {
-                      role = v;
-                    });
-                  },
-                  value: role,
-                  items: ["Rol", "ADMIN", "PACIENTE"]
-                      .map((v) => DropdownMenuItem(
-                            child: Text(v),
-                            value: v,
-                          ))
-                      .toList()),
+              Visibility(
+                visible: isAdmin,
+                child: DropdownButtonFormField(
+                    validator: (value) =>
+                        value == "Rol" ? "campo requerido" : null,
+                    onChanged: (String v) {
+                      setState(() {
+                        role = v;
+                      });
+                    },
+                    value: role,
+                    items: ["Rol", "ADMIN", "PACIENTE"]
+                        .map((v) => DropdownMenuItem(
+                              child: Text(v),
+                              value: v,
+                            ))
+                        .toList()),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 12.0),
                 child: Text("fecha de nacimiento"),
